@@ -1,0 +1,24 @@
+
+'''
+# from Python08.docx (no web view)
+# Learn to walk before you run.
+
+学习目的：简单的MVC及ORM实现，希望代码思路正确 
+
+程序介绍：账户注册，insert用户名、密码和邮箱(假设用户输入的符合规范，更成熟功能后期完善)，
+
+账户注册 工作流：
+	controller.py --> 获取api.py的值 --> 获取view用户输入的数据（user,passwd和mail） --> 最后 controller拿到数据
+	controller.py --> 提交给 Sql_Statement 去insert数据
+
+	问题：view应该是第1被用户出发，然后采取调用api给controller.py，但我这个程序是先运行controller.py
+
+学习日期：2015.12.02
+
+修改记录
+【当前】registe_0.04 [拆分文件 db_operation.py ]
+registe_0.031[session应该封装在init中]
+registe_0.030[错误：session应该封装在init里-不应该在def session_keeping中]
+registe_0.02[增加view(print), 无web view]
+registe_0.01[无view,无select]
+'''
