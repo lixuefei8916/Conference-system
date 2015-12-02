@@ -8,7 +8,14 @@
 程序介绍：账户注册，insert用户名、密码和邮箱(假设用户输入的符合规范，更成熟功能后期完善)，
           print出查询结果
 学习日期：2015.12.01
+
+修改记录
+【当前】registe_0.031[session应该封装在init中]
+registe_0.030[错误：session应该封装在init里-不应该在def session_keeping中]
+registe_0.02[增加view(print), 无web view]
+registe_0.01[无view,无select]
 '''
+
 
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -17,12 +24,30 @@ from sqlalchemy import Column,Integer,String
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import select,text
 
-db = create_engine('mysql://lixuefei:123456@127.0.0.1')
-db.execute('USE conference')
-#db.echo=True
-Base = declarative_base()
+#	account = Account_model(user_name=self.__user_name,user_password=self.__user_password,user_mail=self.__user_mail)
 
-class Account_model(Base):						# Account_model = account表名(mysql)
+class Mysql_(object):
+	def __init__(self):
+		db = create_engine('mysql://lixuefei:123456@127.0.0.1')
+		db.execute('USE conference')
+		Session = sessionmaker(bind=db)
+		self.session = Session()
+
+	def insert_new_account(self,table_name,user_name,user_password,user_mail):
+	
+		account = Table_account_model(user_name=user_name,user_password=user_password,user_mail=user_mail)
+		self.session.add(account)
+		self.session.commit()
+
+	def select_account_detail(self,user_name):		# select user_id==13 from account
+		#account = Account_model(user_name=self.__user_name,user_password=self.__user_password,user_mail=self.__user_mail)
+		account_detail = self.session.query(Table_account_model).filter(Table_account_model.user_name==user_name).all()
+		return account_detail
+
+
+Base = declarative_base()	# 声明ORM父类 Base
+
+class Table_account_model(Base):						# Account_model = account表名(mysql)
 	__tablename__ = 'account'
 	#原mysql语句
 	#CREATE TABLE account(user_id INT PRIMARY KEY AUTO_INCREMENT,user_name VARCHAR(250),user_password VARCHAR(250),user_mail VARCHAR(250));
@@ -43,8 +68,10 @@ class View(object):
 
 class Account_Controller(object):
 	def __init__(self):
-		self.model = Account_model()
+		#self.model = Table_account_model()
 		self.view = View()
+		self.mysql = Mysql_()
+		#self.session = self.mysql.session_keeping()	# 把 class Mysql_operation()中session带进来
 
 		self.__user_name = ''
 		self.__user_password = ''
@@ -61,27 +88,18 @@ class Account_Controller(object):
 
 	def insert_account_detail(self):						# insert 进mysql
 		#Insert数据
-		#Account_model(user_name='example0',user_password='123456',user_mail='test0@lixuefei.com')
+		table_name = Table_account_model
+		self.mysql.insert_new_account(table_name,self.__user_name,self.__user_password,self.__user_mail)
 
-		account = Account_model(user_name=self.__user_name,user_password=self.__user_password,user_mail=self.__user_mail)
-		session = sessionmaker(bind=db)
-		session = session()
-		session.add(account)
-		session.commit()
-
-	def get_account_detail(self):							# select user_id==13 from account
-		username = self.__user_name
-		account = Account_model(user_name=self.__user_name,user_password=self.__user_password,user_mail=self.__user_mail)
-		session = sessionmaker(bind=db)
-		session = session()
-		account_detail = session.query(Account_model).filter(Account_model.user_id==13).one()
+	def get_account_detail(self,user_name):							# select user_id==13 from account
+		account_detail = self.mysql.select_account_detail(user_name)
 		self.view.print_account_detail(account_detail)
 
 
 
-username = 'example13'
-userpassword = '22222222222'
-usermail = 'example3@lixuefei.com'
+username = 'example15'
+userpassword = '151515151515'
+usermail = 'example15@lixuefei.com'
 
 if __name__ == '__main__':
 	lxf = Account_Controller()
@@ -89,7 +107,7 @@ if __name__ == '__main__':
 	lxf.registe_user_password(userpassword)
 	lxf.registe_user_mail(usermail)
 	lxf.insert_account_detail()
-	lxf.get_account_detail()
+	lxf.get_account_detail('example15')
 
 
 
