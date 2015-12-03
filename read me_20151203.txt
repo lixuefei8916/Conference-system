@@ -1,0 +1,17 @@
+
+'''
+工作过程：api --> contorller --> model
+
+学习日期：2015.12.03
+
+修改记录
+【当前】registe_0.041 [MVC设计的更合理： api -- controller -- model]
+registe_0.04 [拆分文件 db_operation.py ，但MVC很混乱]
+registe_0.031[session应该封装在init中]
+registe_0.030[错误：session应该封装在init里-不应该在def session_keeping中]
+registe_0.02[增加view(print), 无web view]
+registe_0.01[无view,无select]
+
+# from Python08.docx (no web view)
+# Learn to walk before you run.
+'''
